@@ -236,6 +236,17 @@
     margin-top: 28px;
 }
 
+.section__title {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.section__lead {
+    margin: 0 0 18px;
+    color: var(--muted);
+}
+
 .home .section-head h2 {
     margin: 0 0 12px;
     font-size: 16px;
@@ -319,6 +330,8 @@
 
 .fcard__foot {
     margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
 }
 
 /* 뱃지/버튼 */
