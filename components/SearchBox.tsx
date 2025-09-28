@@ -1,6 +1,6 @@
 'use client';
 
-import { Trans, useI18n } from '../components/i18n';
+import { Trans, useI18n } from '@/components/i18n';
 
 export default function SearchBox() {
     const { lang } = useI18n();
@@ -29,8 +29,10 @@ export default function SearchBox() {
                         : '챔피언/아이템/패치 검색 (예: Ahri, 25.19, Trinity)'
                 }
             />
-            <button type="submit">
+            <button type="submit" className="btn">
+              <span suppressHydrationWarning>
                 <Trans ko="검색" en="Search" />
+              </span>
             </button>
         </form>
     );
