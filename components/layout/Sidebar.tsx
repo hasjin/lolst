@@ -37,9 +37,11 @@ export default function Sidebar() {
                   </span>
                                     {/* 핵심은 pro 아님. “지원 예정”만 표시 */}
                                     <span className="lnb__pills">
+                                        {it.planned &&
                     <span className="lnb__pill lnb__pill--muted">
                       <Trans ko="지원 예정" en="Planned" />
                     </span>
+                                        }
                   </span>
                                 </Link>
                             </li>
@@ -66,9 +68,11 @@ export default function Sidebar() {
                                   </span>
                                                     <span className="lnb__pills">
                                     <span className="lnb__pill">Pro</span>
+                                                        {it.planned &&
                                     <span className="lnb__pill lnb__pill--muted">
                                       <Trans ko="지원 예정" en="Planned" />
                                     </span>
+                                                        }
                                   </span>
                                 </Link>
                             </li>

@@ -445,6 +445,8 @@
     background: #0e1730;
 }
 
+/* footer */
+
 .footer {
     border-top: 1px solid var(--border);
     margin-top: 24px;
@@ -504,3 +506,45 @@
 .footer .sep {
     opacity: .45;
 }
+
+/* contents */
+/* e.g. in globals.css or layout.css */
+
+.twoCol {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 18px;
+}
+
+.leftPane, .rightPane {
+    background: var(--pane);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.paneHead { margin-bottom: 10px; }
+.paneHead h2 { margin: 0; font-size: 20px; }
+.paneHead .sub { color: var(--muted); font-size: 12px; }
+
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.rowBtn {
+    width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 10px; border-radius: 8px; border: 1px solid transparent;
+    background: transparent; color: var(--text); text-align: left; cursor: pointer;
+}
+.rowBtn:hover { background: #0e1730; border-color: #243055; }
+.rowBtn.is-active { background: #0e1730; border-color: #3553c9; }
+.rowBtn .title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.delta.up { color: #8ff29a; }
+.delta.down { color: #ff9aa2; }
+
+.statCard { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.statTitle { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+.statGrid { display: grid; grid-template-columns: 80px 1fr; row-gap: 4px; }
+.statGrid small.up { color: #8ff29a; margin-left: 6px; }
+.statGrid small.down { color: #ff9aa2; margin-left: 6px; }
+
+.chartWrap { margin-top: 12px; }
+.empty { color: var(--muted); padding: 24px; text-align: center; }

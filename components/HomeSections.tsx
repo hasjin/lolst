@@ -25,7 +25,7 @@ export default function HomeSections() {
                                 href={it.href}
                                 title={<Trans ko={it.ko} en={it.en} />}
                                 desc={getDesc(it)}
-                                planned
+                                planned={it.planned}
                             />
                         </li>
                     ))}
@@ -49,7 +49,7 @@ export default function HomeSections() {
                                 title={<Trans ko={it.ko} en={it.en} />}
                                 desc={getDesc(it)}
                                 pro
-                                planned
+                                planned={it.planned}
                             />
                         </li>
                     ))}

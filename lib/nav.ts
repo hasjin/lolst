@@ -20,7 +20,7 @@ const coreItems: NavItemFull[] = [
         key: 'patch-champ-impact',
         href: '/reports/patch-champ-impact',
         label: { ko: '패치별 챔피언 영향도', en: 'Champion impact by patch' },
-        planned: true,
+        planned: false,
         summary: {
             ko: '전·후 패치 대비 픽률·밴률·승률 변화와 신뢰구간',
             en: 'Pick/ban/win-rate deltas with confidence intervals',
