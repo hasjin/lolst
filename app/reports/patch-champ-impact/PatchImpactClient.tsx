@@ -16,6 +16,8 @@ type Props = {
     champMap: ReadonlyArray<readonly [number, Readonly<L10n>]>;
 };
 
+type RowWithScore = PatchChampImpactRow & { score: number };
+
 // 큐 라벨
 const Q: Record<number, L10n> = {
     420: { ko: '솔로/듀오 랭크', en: 'Ranked Solo/Duo' },
@@ -51,15 +53,26 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
     const { lang } = useI18n(); // 'ko' | 'en'
     const nameMap = useMemo(() => new Map<number, Readonly<L10n>>(champMap), [champMap]);
 
+    const rowsById = useMemo(() => new Map(rows.map(r => [r.championId, r])), [rows]);
+
     // 변동 스코어(절대값 합)
     const sorted = useMemo(() => {
-        return [...rows]
-            .map(r => ({
-                ...r,
-                score: Math.abs(r.dWinRate ?? 0) + Math.abs(r.dPickRate ?? 0) + Math.abs(r.dBanRate ?? 0),
-            }))
-            .sort((a,b) => b.score - a.score);
-    }, [rows]);
+      const ids = champMap.map(([id]) => id);
+      const full: RowWithScore[] = ids.map((id) => {
+        const base = rowsById.get(id) ?? ({
+          championId: id,
+          winRate: 0,
+          pickRate: 0,
+          banRate: 0,
+          dWinRate: 0,
+          dPickRate: 0,
+          dBanRate: 0,
+        } as PatchChampImpactRow);
+        const score = Math.abs(base.dWinRate ?? 0) + Math.abs(base.dPickRate ?? 0) + Math.abs(base.dBanRate ?? 0);
+        return { ...(base as PatchChampImpactRow), score } as RowWithScore;
+      });
+      return full.sort((a, b) => b.score - a.score);
+    }, [champMap, rowsById]);
 
     const [sel, setSel] = useState(sorted[0]?.championId ?? 0);
     useEffect(() => {
@@ -101,7 +114,7 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
                     <h2><Trans ko="상위 변동" en="Top shifts"/></h2>
                     <div className="sub">{patch}, {queueLabel(queue, lang)}</div>
                 </div>
-                <ul className="list" role="list">
+                <ul className="list" role="list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                     {sorted.map(r => (
                         <li key={r.championId}>
                             <button

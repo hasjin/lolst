@@ -246,7 +246,21 @@ html, body { width: 100%; overflow-x: hidden; }
 @supports (height: 100dvh) { .leftPane .list { max-height: calc(100dvh - 180px); } }
 .leftPane .list { overflow: auto; -webkit-overflow-scrolling: touch; }
 
-.rowBtn { padding: 12px 14px; line-height: 1.2; }
+/* Replaced rowBtn rule as per instructions */
+.rowBtn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.2;
+}
 @media (max-width: 420px) { .rowBtn .title { font-size: 14px; } }
 .rowBtn:hover { background: #0e1730; border-color: #243055; }
 .rowBtn.is-active { background: #0e1730; border-color: #3553c9; }
@@ -322,3 +336,32 @@ html, body { width: 100%; overflow-x: hidden; }
 
 .nav a.is-disabled,
 a[aria-disabled] { pointer-events: none; opacity: .6; cursor: not-allowed; }
+
+.impactWrap { display: grid; gap: 14px; }
+.impactHead { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.impactTitle { margin: 0; font-size: 22px; line-height: 1.25; }
+.impactSub { color: var(--muted); font-size: 12px; }
+.impactPicker { display: flex; align-items: center; gap: 8px; }
+.impactPicker__label { color: var(--muted); font-size: 12px; }
+.impactPicker__select {
+    appearance: none;
+    background: var(--pane);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    min-width: 160px;
+}
+.kpiGrid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 720px) { .kpiGrid { grid-template-columns: 1fr; } }
+.kpiCard {
+    background: var(--pane);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+.kpiLabel { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+.kpiValue { font-size: 22px; font-weight: 700; }
+.kpiDelta { font-size: 12px; margin-top: 2px; }
+.kpiDelta.pos { color: #8ff29a; }
+.kpiDelta.neg { color: #ff9aa2; }
