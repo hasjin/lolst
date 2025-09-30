@@ -18,10 +18,10 @@ export default function Sidebar() {
     useEffect(() => { localStorage.setItem('lnb.pro',  openPro  ? '1' : '0'); }, [openPro]);
 
     return (
-        <nav className="lnb" aria-label="Primary">
+        <nav id="app-sidebar" data-app-sidebar className="lnb" aria-label="Primary">
             {/* Core */}
             <div className="lnb__group" data-open={openCore} aria-expanded={openCore}>
-                <button className="lnb__groupHead" onClick={() => setOpenCore(v => !v)}>
+                <button type="button" className="lnb__groupHead" onClick={() => setOpenCore(v => !v)}>
                       <span className="lnb__groupTitle">
                         <span suppressHydrationWarning><Trans ko="핵심 리포트" en="Core" /></span>
                       </span>
@@ -31,7 +31,13 @@ export default function Sidebar() {
                     <ul className="lnb__list">
                         {coreNav.map(it => (
                             <li key={it.key}>
-                                <Link className="lnb__link" href={it.href}>
+                                <Link
+                                  className="lnb__link"
+                                  href={it.planned ? '#' : it.href}
+                                  aria-disabled={it.planned}
+                                  prefetch={false}
+                                  onClick={(e) => { if (it.planned) e.preventDefault(); }}
+                                >
                   <span className="lnb__label">
                     <Trans ko={it.ko} en={it.en} />
                   </span>
@@ -52,7 +58,7 @@ export default function Sidebar() {
 
             {/* Advanced / Pro */}
             <div className="lnb__group" data-open={openPro} aria-expanded={openPro}>
-                <button className="lnb__groupHead" onClick={() => setOpenPro(v => !v)}>
+                <button type="button" className="lnb__groupHead" onClick={() => setOpenPro(v => !v)}>
                       <span className="lnb__groupTitle">
                         <span suppressHydrationWarning><Trans ko="고급 분석" en="Advanced" /></span>
                       </span>
@@ -62,7 +68,13 @@ export default function Sidebar() {
                     <ul className="lnb__list">
                         {proNav.map(it => (
                             <li key={it.key}>
-                                <Link className="lnb__link" href={it.href}>
+                                <Link
+                                  className="lnb__link"
+                                  href={it.planned ? '#' : it.href}
+                                  aria-disabled={it.planned}
+                                  prefetch={false}
+                                  onClick={(e) => { if (it.planned) e.preventDefault(); }}
+                                >
                                   <span className="lnb__label">
                                     <Trans ko={it.ko} en={it.en} />
                                   </span>
