@@ -244,23 +244,25 @@
 
 html, body { width: 100%; overflow-x: hidden; }
 @supports (height: 100dvh) { .leftPane .list { max-height: calc(100dvh - 180px); } }
-.leftPane .list { overflow: auto; -webkit-overflow-scrolling: touch; }
+.leftPane .list { list-style: none; overflow: auto; -webkit-overflow-scrolling: touch; }
 
 /* Replaced rowBtn rule as per instructions */
-.rowBtn {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 14px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: var(--text);
-    text-align: left;
-    cursor: pointer;
-    line-height: 1.2;
+.rowBtn{
+    width:100%;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 10px; border-radius:8px; border:1px solid transparent;
+    background:transparent; color:var(--text); text-align:left; cursor:pointer;
 }
+
+.filterInput{
+    width:100%;
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:var(--pane);
+    color:var(--text);
+}
+
 @media (max-width: 420px) { .rowBtn .title { font-size: 14px; } }
 .rowBtn:hover { background: #0e1730; border-color: #243055; }
 .rowBtn.is-active { background: #0e1730; border-color: #3553c9; }

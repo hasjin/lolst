@@ -5,6 +5,22 @@ import {useEffect, useMemo, useState} from 'react';
 import {Trans, useI18n} from '@/components/i18n';
 import type { PatchChampImpactRow } from '@/lib/types/reports';
 
+function toInitials(s: string): string {
+    const CHO = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+    let out = '';
+    for (const ch of s) {
+        const code = ch.codePointAt(0)!;
+        if (code >= 0xac00 && code <= 0xd7a3) {
+            const idx = Math.floor((code - 0xac00) / (21 * 28));
+            out += CHO[idx] ?? ch;
+        } else {
+            out += ch;
+        }
+    }
+    return out;
+}
+const norm = (s: string) => s.normalize('NFKD').toLowerCase();
+
 type L10n = { ko: string; en: string };
 type TrendPt = { patch: string; games: number; wins: number; winRate: number; pickRate: number };
 
@@ -12,13 +28,11 @@ type Props = {
     patch: string;
     queue: number;
     rows: PatchChampImpactRow[];
-    /** Accept readonly tuples/arrays from callers (e.g., from `as const`/Map.entries) */
     champMap: ReadonlyArray<readonly [number, Readonly<L10n>]>;
 };
 
 type RowWithScore = PatchChampImpactRow & { score: number };
 
-// 큐 라벨
 const Q: Record<number, L10n> = {
     420: { ko: '솔로/듀오 랭크', en: 'Ranked Solo/Duo' },
     430: { ko: '일반 (비랭크)',   en: 'Normal (Blind/Draft)' },
@@ -28,7 +42,6 @@ const Q: Record<number, L10n> = {
 const queueLabel = (q: number, lang: 'ko' | 'en') =>
     (Q[q] ?? { ko: `큐 ${q}`, en: `Queue ${q}` })[lang];
 
-// 작은 선형 차트 (SVG)
 function Sparkline({ data, h = 120, w = 360, color = '#7dd3fc' }:{data:number[];h?:number;w?:number;color?:string}) {
     if (!data.length) return null;
     const min = Math.min(...data);
@@ -50,12 +63,14 @@ const pct = (v:number) => `${(v*100).toFixed(2)}%`;
 const delta = (v:number) => `${v>0?'+':''}${(v*100).toFixed(2)}%`;
 
 export default function PatchImpactClient({ patch, queue, rows, champMap }: Props) {
-    const { lang } = useI18n(); // 'ko' | 'en'
+    const { lang } = useI18n();
+
+    const [query, setQuery] = useState('');
+
     const nameMap = useMemo(() => new Map<number, Readonly<L10n>>(champMap), [champMap]);
 
     const rowsById = useMemo(() => new Map(rows.map(r => [r.championId, r])), [rows]);
 
-    // 변동 스코어(절대값 합)
     const sorted = useMemo(() => {
       const ids = champMap.map(([id]) => id);
       const full: RowWithScore[] = ids.map((id) => {
@@ -81,7 +96,31 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
 
     const current = sorted.find(r => r.championId === sel);
 
-    // 트렌드
+    const filtered = useMemo(() => {
+        const q = norm(query.trim());
+        if (!q) return sorted;
+
+        const qInit = toInitials(q);
+        return sorted.filter(r => {
+            const nm = nameMap.get(r.championId);
+            if (!nm) return false;
+
+            const ko = norm(nm.ko || '');
+            const en = norm(nm.en || '');
+            const koInit = norm(toInitials(nm.ko || ''));
+
+            return (
+                ko.includes(q) || en.includes(q) || (qInit && koInit.includes(qInit))
+            );
+        });
+    }, [sorted, query, nameMap]);
+
+    useEffect(() => {
+        if (filtered.length && !filtered.some(r => r.championId === sel)) {
+            setSel(filtered[0].championId);
+        }
+    }, [filtered, sel]);
+
     const [trend, setTrend] = useState<TrendPt[] | null>(null);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -108,14 +147,26 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
 
     return (
         <div className="twoCol">
-            {/* LEFT */}
             <aside className="leftPane">
+                <div style={{marginBottom: 10}}>
+                    <input
+                        type="search"
+                        value={query}
+                        onChange={(e) => setQuery(e.currentTarget.value)}
+                        placeholder="챔피언 검색 (예: ㅇㄹㄹ / ahri)"
+                        aria-label="filter champions"
+                        className="filterInput"
+                    />
+                </div>
                 <div className="paneHead">
                     <h2><Trans ko="상위 변동" en="Top shifts"/></h2>
                     <div className="sub">{patch}, {queueLabel(queue, lang)}</div>
                 </div>
+                {filtered.length === 0 ? (
+                    <div className="empty"><Trans ko="검색 결과가 없습니다." en="No matches."/></div>
+                ) : (
                 <ul className="list" role="list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                    {sorted.map(r => (
+                    {filtered.map(r => (
                         <li key={r.championId}>
                             <button
                                 type="button"
@@ -123,14 +174,14 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
                                 onClick={()=>setSel(r.championId)}
                             >
                                 <span className="title">{champName(r.championId)}</span>
-                                <span className={`delta ${r.score>=0?'up':'down'}`}>▲ {pct(r.score)}</span>
+                                <span className="delta up">▲ {((r.score)*100).toFixed(2)}%</span>
                             </button>
                         </li>
                     ))}
                 </ul>
+                )}
             </aside>
 
-            {/* RIGHT */}
             <section className="rightPane">
                 {current ? (
                     <>
@@ -145,13 +196,25 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
                             <div className="statTitle"><Trans ko="현재 패치" en="Current patch"/> ({patch})</div>
                             <div className="statGrid">
                                 <div><Trans ko="승률" en="Win%"/></div>
-                                <div><strong>{pct(current.winRate)}</strong> <small className="up">({delta(current.dWinRate)})</small></div>
+                                <div>
+                                  <strong>{pct(current.winRate)}</strong>
+                                  <small className={(current.dWinRate ?? 0) >= 0 ? 'up' : 'down'}>({delta(current.dWinRate ?? 0)})</small>
+                                  <small style={{marginLeft:6, opacity:.8}}>prev {pct((current.winRate ?? 0) - (current.dWinRate ?? 0))}</small>
+                                </div>
 
                                 <div><Trans ko="픽률" en="Pick%"/></div>
-                                <div><strong>{pct(current.pickRate)}</strong> <small className="up">({delta(current.dPickRate)})</small></div>
+                                <div>
+                                  <strong>{pct(current.pickRate)}</strong>
+                                  <small className={(current.dPickRate ?? 0) >= 0 ? 'up' : 'down'}>({delta(current.dPickRate ?? 0)})</small>
+                                  <small style={{marginLeft:6, opacity:.8}}>prev {pct((current.pickRate ?? 0) - (current.dPickRate ?? 0))}</small>
+                                </div>
 
                                 <div><Trans ko="밴률" en="Ban%"/></div>
-                                <div><strong>{pct(current.banRate)}</strong> <small className="up">({delta(current.dBanRate)})</small></div>
+                                <div>
+                                  <strong>{pct(current.banRate)}</strong>
+                                  <small className={(current.dBanRate ?? 0) >= 0 ? 'up' : 'down'}>({delta(current.dBanRate ?? 0)})</small>
+                                  <small style={{marginLeft:6, opacity:.8}}>prev {pct((current.banRate ?? 0) - (current.dBanRate ?? 0))}</small>
+                                </div>
                             </div>
                         </div>
 
