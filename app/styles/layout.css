@@ -234,12 +234,119 @@
 .footer__links a:hover { color: var(--text); background: #0e1730; border-color: #2a355a; }
 .footer .sep { opacity: .45; }
 
-.twoCol { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 16px; }
-.leftPane, .rightPane { min-width: 0; background: var(--pane); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+/* ========================================
+   2열 레이아웃 (리스트 + 디테일)
+   ======================================== */
+.twoCol {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 16px;
+}
+
+.leftPane, .rightPane {
+    min-width: 0;
+    background: var(--pane);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+/* 모바일 탭 네비게이션: 기본적으로 숨김 */
+.mobileTabs {
+    display: none;
+}
+
+/* 태블릿/모바일: 탭 방식으로 전환 */
 @media (max-width: 1024px) {
-    .twoCol { grid-template-columns: 1fr; }
-    .leftPane { order: 2; position: static; }
-    .rightPane { order: 1; }
+    .twoCol {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    /* 모바일 탭 네비게이션 표시 */
+    .mobileTabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 12px;
+        background: var(--pane);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 6px;
+        /* 탭을 최상단에 고정 (sticky) */
+        position: sticky;
+        top: var(--hdr-h, 62px);
+        z-index: 10;
+    }
+
+    .mobileTab {
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mobileTab:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .mobileTab.is-active {
+        background: var(--hover);
+        border-color: #3553c9;
+        color: #fff;
+    }
+
+    .mobileTabChamp {
+        font-weight: 400;
+        opacity: 0.9;
+    }
+
+    /* 모바일에서는 탭에 따라 패널 표시/숨김 */
+    .leftPane, .rightPane {
+        display: none;
+    }
+
+    .leftPane.is-mobile-visible,
+    .rightPane.is-mobile-visible {
+        display: block;
+    }
+
+    /* 모바일 뒤로 가기 버튼: 모바일에서만 표시 */
+    .mobileBackBtn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text);
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .mobileBackBtn:hover {
+        background: #0e1730;
+        border-color: #2a355a;
+    }
+}
+
+/* 데스크톱에서는 뒤로 가기 버튼 숨김 */
+@media (min-width: 1025px) {
+    .mobileBackBtn {
+        display: none;
+    }
 }
 
 html, body { width: 100%; overflow-x: hidden; }

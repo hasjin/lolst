@@ -194,6 +194,8 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
     const { lang } = useI18n();
 
     const [query, setQuery] = useState('');
+    // 모바일용 탭 상태: 'list' | 'detail'
+    const [mobileView, setMobileView] = useState<'list' | 'detail'>('list');
 
     const nameMap = useMemo(() => new Map<number, Readonly<L10n>>(champMap), [champMap]);
 
@@ -289,7 +291,27 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
 
     return (
         <div className="twoCol">
-            <aside className="leftPane">
+            {/* 모바일 탭 네비게이션 */}
+            <div className="mobileTabs">
+                <button
+                    type="button"
+                    className={`mobileTab ${mobileView === 'list' ? 'is-active' : ''}`}
+                    onClick={() => setMobileView('list')}
+                >
+                    <Trans ko="챔피언 목록" en="Champion List" />
+                </button>
+                <button
+                    type="button"
+                    className={`mobileTab ${mobileView === 'detail' ? 'is-active' : ''}`}
+                    onClick={() => setMobileView('detail')}
+                    disabled={!current}
+                >
+                    <Trans ko="상세 정보" en="Details" />
+                    {current && <span className="mobileTabChamp">: {champName(current.championId)}</span>}
+                </button>
+            </div>
+
+            <aside className={`leftPane ${mobileView === 'list' ? 'is-mobile-visible' : ''}`}>
                 <div style={{marginBottom: 10}}>
                     <input
                         type="search"
@@ -317,7 +339,11 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
                                 <button
                                     type="button"
                                     className={`rowBtn ${sel===r.championId ? 'is-active' : ''}`}
-                                    onClick={()=>setSel(r.championId)}
+                                    onClick={() => {
+                                        setSel(r.championId);
+                                        // 모바일에서 챔피언 선택 시 상세 정보 탭으로 자동 전환
+                                        setMobileView('detail');
+                                    }}
                                 >
                                     <span className="title">{champName(r.championId)}</span>
                                     <span className={`delta ${up ? 'up' : 'down'}`}>
@@ -331,9 +357,18 @@ export default function PatchImpactClient({ patch, queue, rows, champMap }: Prop
                 )}
             </aside>
 
-            <section className="rightPane">
+            <section className={`rightPane ${mobileView === 'detail' ? 'is-mobile-visible' : ''}`}>
                 {current ? (
                     <>
+                        {/* 모바일 뒤로 가기 버튼 */}
+                        <button
+                            type="button"
+                            className="mobileBackBtn"
+                            onClick={() => setMobileView('list')}
+                        >
+                            ← <Trans ko="목록으로" en="Back to list" />
+                        </button>
+
                         <div className="paneHead">
                             <h2>{champName(current.championId)}</h2>
                             <div className="sub">
