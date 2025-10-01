@@ -30,7 +30,7 @@ const coreItems: NavItemFull[] = [
         key: 'ban-pick',
         href: '/reports/ban-pick',
         label: { ko: '밴/픽률 분석 (지역/티어/라인)', en: 'Ban/Pick analysis (region/tier/role)' },
-        planned: true,
+        planned: false,
         summary: {
             ko: '주요 지역을 티어·라인 필터로 세분 분석',
             en: 'Regions with tier/role filters',

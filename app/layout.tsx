@@ -23,10 +23,22 @@ import Footer from "@/components/layout/Footer";
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     // 쿠키에서 사용자 언어 설정 읽기 (기본값: 'ko')
     const cookieLang = (await cookies()).get('lang')?.value === 'en' ? 'en' : 'ko';
+    const cookieTheme = (await cookies()).get('theme')?.value;
 
     // @ts-ignore - Next.js의 suppressHydrationWarning 관련 타입 이슈 무시
     return (
         <html lang={cookieLang} suppressHydrationWarning>
+        <head>
+            <script dangerouslySetInnerHTML={{
+                __html: `
+                    (function() {
+                        const theme = document.cookie.match(/theme=(light|dark)/)?.[1] ||
+                                     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        document.documentElement.setAttribute('data-theme', theme);
+                    })();
+                `
+            }} />
+        </head>
         <body>
             {/* 다국어 Provider: 전체 앱을 감싸서 언어 상태 제공 */}
             <I18nProvider defaultLang={cookieLang}>

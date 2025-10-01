@@ -8,8 +8,8 @@ const EDGE_SIGNING_SECRET = process.env.EDGE_SIGNING_SECRET;
 if (!EDGE_SIGNING_SECRET) {
     throw new Error('EDGE_SIGNING_SECRET is not set');
 }
-if (!/^https?:\/\//.test(BASE)) {
-    throw new Error('API_BASE must include protocol, e.g. http://localhost:3005');
+if (!BASE || !/^https?:\/\//.test(BASE)) {
+    throw new Error('REPORTS_API_BASE must be set and include protocol, e.g. http://localhost:3005');
 }
 
 const sha256Hex = (input: Buffer | string) =>

@@ -20,6 +20,7 @@
 import Link from 'next/link';
 import SearchBox from '@/components/SearchBox';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import ThemeToggle from '@/components/ThemeToggle';
 import { SITE_NAME } from '@/lib/site';
 import MobileNav from "@/components/layout/MobileNav";
 
@@ -36,8 +37,9 @@ export default function Head() {
                 <SearchBox />
             </div>
 
-            {/* 우측: 언어 전환 버튼 */}
+            {/* 우측: 테마 토글 + 언어 전환 버튼 */}
             <div className="hdr__right">
+                <ThemeToggle />
                 <LanguageSwitcher />
             </div>
 
