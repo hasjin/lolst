@@ -336,8 +336,9 @@ html, body { width: 100%; overflow-x: hidden; }
     .hdr__right { grid-area: lang; justify-self: end; }
 }
 
+/* 비활성화된 링크: pointer-events 차단 */
 .nav a.is-disabled,
-a[aria-disabled] { pointer-events: none; opacity: .6; cursor: not-allowed; }
+a[aria-disabled="true"] { pointer-events: none; opacity: .6; cursor: not-allowed; }
 
 .impactWrap { display: grid; gap: 14px; }
 .impactHead { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }

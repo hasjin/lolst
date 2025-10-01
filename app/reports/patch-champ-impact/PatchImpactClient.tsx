@@ -81,9 +81,16 @@ function Sparkline({
 
     const [hover, setHover] = React.useState<{ i: number; x: number; y: number } | null>(null);
     const onMove = (e: React.MouseEvent<SVGSVGElement>) => {
-        const box = (e.currentTarget as SVGSVGElement).getBoundingClientRect(); // 핵심 수정
-        const x = e.clientX - box.left;
-        const rel = Math.max(padL, Math.min(W - padR, x)) - padL;
+        const svg = e.currentTarget as SVGSVGElement;
+        const box = svg.getBoundingClientRect();
+
+        // 실제 화면 좌표를 SVG viewBox 좌표로 변환
+        const mouseX = e.clientX - box.left;
+        const scaleX = W / box.width;  // viewBox 너비 / 실제 렌더링 너비
+        const svgX = mouseX * scaleX;
+
+        // SVG 좌표계에서 데이터 인덱스 계산
+        const rel = Math.max(padL, Math.min(W - padR, svgX)) - padL;
         const i = Math.round(rel / step);
         const idx = Math.max(0, Math.min(n - 1, i));
         setHover({ i: idx, x: padL + idx * step, y: yOf(data[idx]) });
@@ -94,7 +101,6 @@ function Sparkline({
             viewBox={`0 0 ${W} ${H}`}
             width="100%"
             height={H}
-            preserveAspectRatio="none"
             style={{ display: 'block' }}
             onMouseMove={onMove}
             onMouseLeave={() => setHover(null)}

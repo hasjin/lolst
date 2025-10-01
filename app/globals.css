@@ -1,56 +1,214 @@
-:root { --bg:#0b1120; --pane:#0f172a; --line:#1f2a44; --text:#e5e7eb; --muted:#a7b5d4; --brand:#9fb4ff; }
+/* ========================================
+   전역 CSS 변수 및 기본 스타일
+   ======================================== */
+
+/* 다크 테마 색상 변수 정의 */
+:root {
+  --bg:#0b1120;        /* 배경색 */
+  --pane:#0f172a;      /* 카드/패널 배경색 */
+  --line:#1f2a44;      /* 구분선 색상 */
+  --text:#e5e7eb;      /* 기본 텍스트 색상 */
+  --muted:#a7b5d4;     /* 보조 텍스트 색상 */
+  --brand:#9fb4ff;     /* 브랜드 색상 */
+}
+
+/* 모든 요소에 box-sizing 적용 */
 * { box-sizing: border-box; }
-html, body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-inter), system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+
+/* 기본 HTML/Body 스타일 */
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+/* 링크 기본 스타일 */
 a { color: inherit; }
 
-.container { max-width: 1180px; margin: 0 auto; padding: 36px 18px 96px; }
+/* ========================================
+   컨테이너
+   ======================================== */
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 36px 18px 96px;
+}
 
-/* ---------- Hero ---------- */
+/* ========================================
+   Hero 섹션 (메인 헤더)
+   ======================================== */
 .hero {
-    margin: 0 auto 32px; padding: 36px 28px 30px; border-radius: 18px;
-    border: 1px solid #1c2540; position: relative; overflow: hidden;
-    background:
-            radial-gradient(1200px 480px at 10% -20%, #5b8cff33, transparent),
-            radial-gradient(900px 280px at 90% -30%, #22d3ee26, transparent),
-            linear-gradient(180deg, #0b1220, #0b1220);
-}
-.hero h1 { margin: 0 0 10px; font-size: 36px; letter-spacing:.2px; }
-.hero .subtitle { margin: 0 0 18px; color:#c6d4ff; line-height:1.7; }
-.badge { display:inline-block; font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid #2a345e; background:#10192c; color:#9fb4ff; margin-bottom:10px; }
-.domains { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 14px; opacity:.9 }
-.domain { font-size:12px; padding:4px 8px; border-radius:8px; background:#111827; border:1px solid #253058; color:#cfe0ff; }
-.meta { font-size:12px; color:#9fb4ff; opacity:.85; margin-top:12px; }
-
-/* Search: 중앙 정렬 & 포커스 글로우 */
-.search { margin:14px auto 0; width:100%; max-width: 640px;
-    display:flex; gap:8px; align-items:center; background:#0f172a; border:1px solid #243055;
-    border-radius:12px; padding:10px; box-shadow: inset 0 0 0 1px #111827; transition: box-shadow .15s, border-color .15s;
-}
-.search:focus-within { border-color:#3553c9; box-shadow: 0 0 0 4px rgba(53,83,201,.16), inset 0 0 0 1px #111827; }
-.search input { flex:1; background:transparent; border:none; outline:none; color:#e6efff; padding:8px; }
-.search button { background:#1f3b83; color:#e6efff; border:1px solid #2a3f8f; padding:10px 14px; border-radius:10px; cursor:pointer; }
-.search button:hover { background:#284aa6; }
-
-/* ---------- Sections ---------- */
-.section { margin: 34px auto 0; }
-.section-head { color:#e5e7eb; margin:8px 6px 16px; display:flex; align-items:baseline; gap:10px; }
-.section-head h2 { font-size:20px; margin:0; }
-.section-head p { margin:0; color:var(--muted); }
-
-/* ---------- Grid ---------- */
-.grid{
-    display:grid; gap:16px; list-style:none; padding:0; margin:0;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin: 0 auto 32px;
+  padding: 36px 28px 30px;
+  border-radius: 18px;
+  border: 1px solid #1c2540;
+  position: relative;
+  overflow: hidden;
+  /* 그라데이션 배경으로 시각적 깊이감 부여 */
+  background:
+    radial-gradient(1200px 480px at 10% -20%, #5b8cff33, transparent),
+    radial-gradient(900px 280px at 90% -30%, #22d3ee26, transparent),
+    linear-gradient(180deg, #0b1220, #0b1220);
 }
 
-/* ---------- Card ---------- */
-.card{ position:relative; border-radius:16px; overflow:hidden; }
-.card > button{
-    all:unset; display:flex; flex-direction:column; width:100%; height:100%;
-    background: linear-gradient(180deg, #0f172a, #0d1426);
-    border:1px solid var(--line); border-radius:16px; padding:16px; cursor:pointer;
-    transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
-    min-height: 188px; /* ← 여유 높이 */
+.hero h1 {
+  margin: 0 0 10px;
+  font-size: 36px;
+  letter-spacing: 0.2px;
+}
+
+.hero .subtitle {
+  margin: 0 0 18px;
+  color: #c6d4ff;
+  line-height: 1.7;
+}
+
+/* 베지: Beta, Pro 등 라벨 */
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #2a345e;
+  background: #10192c;
+  color: #9fb4ff;
+  margin-bottom: 10px;
+}
+
+/* 도메인 표시 영역 */
+.domains {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 14px;
+  opacity: 0.9;
+}
+
+.domain {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #111827;
+  border: 1px solid #253058;
+  color: #cfe0ff;
+}
+
+/* 메타 정보 (최신 갱신일 등) */
+.meta {
+  font-size: 12px;
+  color: #9fb4ff;
+  opacity: 0.85;
+  margin-top: 12px;
+}
+
+/* ========================================
+   검색창
+   ======================================== */
+/* 중앙 정렬 & 포커스 시 글로우 효과 */
+.search {
+  margin: 14px auto 0;
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #0f172a;
+  border: 1px solid #243055;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: inset 0 0 0 1px #111827;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+/* 포커스 시 파란색 글로우 효과로 사용자 주목도 향상 */
+.search:focus-within {
+  border-color: #3553c9;
+  box-shadow: 0 0 0 4px rgba(53, 83, 201, 0.16), inset 0 0 0 1px #111827;
+}
+
+.search input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e6efff;
+  padding: 8px;
+}
+
+.search button {
+  background: #1f3b83;
+  color: #e6efff;
+  border: 1px solid #2a3f8f;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search button:hover {
+  background: #284aa6;
+}
+
+/* ========================================
+   섹션 레이아웃
+   ======================================== */
+.section {
+  margin: 34px auto 0;
+}
+
+.section-head {
+  color: #e5e7eb;
+  margin: 8px 6px 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.section-head h2 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.section-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ========================================
+   그리드 레이아웃
+   ======================================== */
+/* 반응형 카드 그리드: 화면 크기에 따라 자동 조정 */
+.grid {
+  display: grid;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* ========================================
+   카드 컴포넌트
+   ======================================== */
+.card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.card > button {
+  all: unset;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #0f172a, #0d1426);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+  min-height: 188px; /* 카드 최소 높이 확보 */
 }
 
 .card > button::after {
